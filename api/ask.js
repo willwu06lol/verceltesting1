@@ -24,6 +24,21 @@ export default async function handler(req) {
       );
     }
 
+    // ...inside your handler after reading req.json()
+const { question, context, preAnswer } = await req.json();
+
+const system = `Answer ONLY from the JSON context.
+If the context includes % traceable rows, list each level present (production unit, sourcing area, country/area, other) with its percentage.
+If the context includes a yes/no "Traceability system" value, answer that directly.
+Be concise and never invent values.`;
+
+// If we computed a local preAnswer, bias the model toward that wording:
+const user = `Question: ${question}
+Context JSON:
+${JSON.stringify(context ?? [], null, 2)}
+${preAnswer ? `\nSuggested direct answer from rules: ${preAnswer}\n(Validate against context before finalizing.)` : ""}`;
+
+
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
       return new Response(
