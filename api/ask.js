@@ -30,10 +30,10 @@ export default async function handler(req) {
       });
     }
 
-    const system =
-`Answer ONLY from the JSON context.
-If the context includes % traceable rows, list each level present (production unit, sourcing area, country/area, other) with its percentage.
-If the context includes a yes/no "Traceability system" value, answer that directly.
+    const system = `Answer ONLY from the JSON context.
+If a context row has a categorical value (e.g., "Yes", "No", "N/A", or a text label), return that value exactly, along with the company name.
+If the context includes percentages or numbers, report those directly.
+If asked about "% traceable", list each level present (production unit, sourcing area, country/area, other) with its percentage.
 Be concise and never invent values.`;
 
     const user =
